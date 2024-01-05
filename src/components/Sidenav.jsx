@@ -22,13 +22,14 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: 'hidden',
-});
+    width: drawerWidth,
+    backgroundColor:  ' rgb(183, 202, 221)', // Specify your desired background color here
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: 'hidden',
+  });
 
 const closedMixin = (theme) => ({
   transition: theme.transitions.create('width', {
@@ -104,7 +105,7 @@ export default function Sidenav() {
                 >
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="AreaGraph" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
             <ListItem  disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/bgraph")}}>
