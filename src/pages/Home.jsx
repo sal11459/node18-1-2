@@ -221,13 +221,7 @@ import Stack from '@mui/material/Stack';
 
 // export default PieChart;
 
-
-import React, { useState } from 'react';
-import Sidenav from '../components/Sidenav';
-import Box from '@mui/material/Box';
-import "../App.css";
-import Chart from "react-apexcharts";
-import Navbar from '../components/NavBar';
+//-----------------------------------------------------------
 
 // function TriplePieCharts() {
 //   const chartData = [
@@ -302,93 +296,90 @@ import Navbar from '../components/NavBar';
 
 // export default TriplePieCharts;
 
-function TriplePieCharts() {
-    const chartData = [
-      {
-        id: 1,
-        options: {
-          colors: ["#FF6384", "#36A2EB", "#FFCE56"],
-          labels: ["C", "Python", "Linux"],
-        },
-        series: [44, 55, 41],
-      },
-      {
-        id: 2,
-        options: {
-          colors: ["#4BC0C0", "#9966FF", "#FF9F40"],
-          labels: ["C", "Python", "Linux"],
-        },
-        series: [17, 15, 25],
-      },
-      {
-        id: 3,
-        options: {
-          colors: ["#FF6384", "#36A2EB", "#FFCE56"],
-          labels: ["C", "Python", "Linux"],
-        },
-        series: [30, 40, 50],
-      },
-    ];
-  
-    const [selectedChart, setSelectedChart] = useState(chartData[0]);
-  
-    const handleChartChange = (event) => {
-      const chartId = parseInt(event.target.value);
-      const selected = chartData.find((chart) => chart.id === chartId);
-      setSelectedChart(selected || chartData[0]); // Set default to first chart if not found
-    };
-  
-    let selectedChartTitle = "";
-    switch (selectedChart.id) {
-      case 1:
-        selectedChartTitle = "Pie Chart - Easy";
-        break;
-      case 2:
-        selectedChartTitle = "Pie Chart - Medium";
-        break;
-      case 3:
-        selectedChartTitle = "Pie Chart - Difficult";
-        break;
-      default:
-        selectedChartTitle = "Pie Chart - Easy"; // Default title
-    }
-  
-    return (
-      <>
-        <Box sx={{ display: 'flex' }}>
-          <Sidenav />
-          <Navbar />
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <div className="App">
-              <h1>
-                {selectedChartTitle} <i className="fas fa-chart-pie"></i>
-              </h1>
-              <select onChange={handleChartChange}>
-                {chartData.map((data) => (
-                  <option key={data.id} value={data.id}>
-                    Chart {data.id}
-                  </option>
-                ))}
-              </select>
-              <div className="chart-container">
-                <div className="chart" style={{ width: '100%' }}>
-                  <Chart
-                    options={selectedChart.options}
-                    series={selectedChart.series}
-                    type="pie"
-                    width="55%"
-                  />
-                </div>
+import React, { useState, useEffect } from 'react';
+import Sidenav from '../components/Sidenav';
+import Box from '@mui/material/Box';
+import "../App.css";
+// import "../Triplecharts.css";
+import Chart from "react-apexcharts";
+import Navbar from '../components/NavBar';
+import { data as databaseData } from '../components/Database'; // Adjust the path based on your actual file structure
+
+const TriplePieCharts = () => {
+  const domains = [...new Set(databaseData.map(item => item.name))];
+  const difficulties = [...new Set(databaseData.map(item => item.difficulty))];
+
+  const chartData = {};
+
+  domains.forEach(domain => {
+    chartData[domain] = {};
+    difficulties.forEach(difficulty => {
+      chartData[domain][difficulty] = databaseData.filter(item => item.name === domain && item.difficulty === difficulty)[0];
+    });
+  });
+
+  const [selectedDomain, setSelectedDomain] = useState(domains[0]);
+  const [selectedDifficulty, setSelectedDifficulty] = useState(difficulties[0]);
+  const selectedChart = chartData[selectedDomain][selectedDifficulty];
+
+  const handleDomainChange = (event) => {
+    const domain = event.target.value;
+    setSelectedDomain(domain);
+  };
+
+  const handleDifficultyChange = (event) => {
+    const difficulty = event.target.value;
+    setSelectedDifficulty(difficulty);
+  };
+
+  return (
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <Sidenav />
+        <Navbar />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <div className="App">
+            <h1>
+              Triple Pie Chart for {selectedDomain} - {selectedDifficulty} <i className="fas fa-chart-pie"></i>
+            </h1>
+            <div className="dropdowns">
+              <div className="dropdown">
+                <label htmlFor="domain">Select Domain:</label>
+                <select id="domain" onChange={handleDomainChange} value={selectedDomain}>
+                  {domains.map(domain => (
+                    <option key={domain} value={domain}>
+                      {domain}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="dropdown">
+                <label htmlFor="difficulty">Select Difficulty:</label>
+                <select id="difficulty" onChange={handleDifficultyChange} value={selectedDifficulty}>
+                  {difficulties.map(difficulty => (
+                    <option key={difficulty} value={difficulty}>
+                      {difficulty}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
-          </Box>
+            <div className="chart-container">
+              <div className="chart" style={{ width: '100%' }}>
+                <Chart
+                  options={{ colors: ["#36A2EB", "#FFCE56"] }}
+                  series={[selectedChart.questions_correct, selectedChart.questions_wrong]}
+                  type="pie"
+                  width="55%"
+                />
+              </div>
+            </div>
+          </div>
         </Box>
-      </>
-    );
-  }
-  
-  export default TriplePieCharts;
-  
+      </Box>
+    </>
+  );
+};
 
-  
+export default TriplePieCharts;
 

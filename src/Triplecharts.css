@@ -1,0 +1,23 @@
+/* TriplePieCharts.css */
+
+.App {
+    text-align: center;
+  }
+  
+  .dropdowns {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Adjust as needed */
+   
+  }
+  
+  .dropdown {
+    margin-bottom: 10px; /* Adjust as needed */
+    
+  }
+  
+  .chart-container {
+    background-color: antiquewhite;
+    margin-top: 20px; /* Adjust as needed */
+  }
+  
